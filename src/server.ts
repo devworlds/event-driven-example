@@ -19,7 +19,6 @@ app.post("/order", async (req, res) => {
     orderValue,
   };
   const event = eventFactory.createEvent(orderType, data);
-  logger.info(event)
 
   await publishService.publishEvent(event);
   res.status(201).json({ Order: event });
