@@ -4,7 +4,7 @@ import { rabbitMQConfig } from "../config/rabbitMQConfig";
 import logger from "../utils/logger";
 
 export default class RabbitMQPublisher {
-  private connection!: amqplib.Connection;
+  private connection!: amqplib.ChannelModel;
   private channel!: amqplib.Channel;
 
   constructor() {
@@ -46,7 +46,7 @@ export default class RabbitMQPublisher {
         Buffer.from(JSON.stringify(event.data))
       );
       logger.info(
-        `RabbitMQPublisher: Order Published on Exchange: ${rabbitMQConfig.GetExchange_name()}`
+        `RabbitMQPublisher: Published on ${rabbitMQConfig.GetExchange_name()}`
       );
     } catch (error) {
       logger.error(`RabbitMQPublisher: ${error}`);

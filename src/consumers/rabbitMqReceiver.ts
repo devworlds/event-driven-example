@@ -3,7 +3,7 @@ import { rabbitMQConfig } from "../config/rabbitMQConfig";
 import logger from "../utils/logger";
 
 export default class RabbitMQReceiver {
-  connection!: amqplib.Connection;
+  connection!: amqplib.ChannelModel;
   channel!: amqplib.Channel;
 
   constructor() {
