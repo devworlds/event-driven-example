@@ -1,5 +1,7 @@
 import { SQS } from "@aws-sdk/client-sqs";
 import { sqsConfig } from "../config/sqsConfig";
+import logger from "../utils/logger";
+import { Event } from "../events/event";
 
 export default class SqsReceiver {
   sqs: SQS;
@@ -18,13 +20,13 @@ export default class SqsReceiver {
         const response = await this.sqs.receiveMessage({
           QueueUrl: sqsConfig.GetQueue_url(),
           MaxNumberOfMessages: 1,
-          WaitTimeSeconds: 20,
+          WaitTimeSeconds: 10,
         });
 
         if (response.Messages) {
           for (const message of response.Messages) {
             const event: Event = JSON.parse(message.Body!);
-            console.info("SqsReceiver: Order Processed - ", event);
+            logger.info(`SqsReceiver: Order Processed - ${JSON.stringify(event)}`);
 
             await this.sqs.deleteMessage({
               QueueUrl: sqsConfig.GetQueue_url(),
@@ -32,10 +34,10 @@ export default class SqsReceiver {
             });
           }
         } else {
-          console.info("SqsReceiver: Empty Queue...");
+          logger.info("SqsReceiver: Empty Queue...");
         }
       } catch (error) {
-        console.error("SqsReceiver: Error while receiving message", error);
+        logger.error(`SqsReceiver: ${error}`);
       }
     }
   }

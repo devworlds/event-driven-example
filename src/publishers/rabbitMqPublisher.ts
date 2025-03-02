@@ -1,6 +1,7 @@
 import amqplib from "amqplib";
 import { Event } from "../events/event";
 import { rabbitMQConfig } from "../config/rabbitMQConfig";
+import logger from "../utils/logger";
 
 export default class RabbitMQPublisher {
   private connection!: amqplib.Connection;
@@ -19,9 +20,9 @@ export default class RabbitMQPublisher {
         durable: true,
       });
 
-      console.info("RabbitMQPublisher: Connected and Channel is open.");
+      logger.info("RabbitMQPublisher: Connected and Channel is open.");
     } catch (error) {
-      console.error(
+      logger.error(
         "RabbitMQPublisher: Fail to connect or create channel",
         error
       );
@@ -30,7 +31,7 @@ export default class RabbitMQPublisher {
 
   private async ensureChannel() {
     if (!this.channel || !this.channel.connection) {
-      console.info("RabbitMQPublisher: Reconnecting channel...");
+      logger.info("RabbitMQPublisher: Reconnecting channel...");
       await this.init();
     }
   }
@@ -44,11 +45,11 @@ export default class RabbitMQPublisher {
         rabbitMQConfig.GetRouting_key(),
         Buffer.from(JSON.stringify(event.data))
       );
-      console.info(
+      logger.info(
         `RabbitMQPublisher: Order Published on Exchange: ${rabbitMQConfig.GetExchange_name()}`
       );
     } catch (error) {
-      console.error("RabbitMQPublisher: Error to publish order:", error);
+      logger.error(`RabbitMQPublisher: ${error}`);
     }
   }
 
@@ -56,14 +57,14 @@ export default class RabbitMQPublisher {
     try {
       if (this.channel) {
         await this.channel.close();
-        console.info("RabbitMQPublisher: Channel closed.");
+        logger.info("RabbitMQPublisher: Channel closed.");
       }
       if (this.connection) {
         await this.connection.close();
-        console.info("RabbitMQPublisher: Connection closed.");
+        logger.info("RabbitMQPublisher: Connection closed.");
       }
     } catch (error) {
-      console.error(
+      logger.error(
         "RabbitMQPublisher: Error closing RabbitMQ connection or channel:",
         error
       );

@@ -1,5 +1,6 @@
 import amqplib from "amqplib";
 import { rabbitMQConfig } from "../config/rabbitMQConfig";
+import logger from "../utils/logger";
 
 export default class RabbitMQReceiver {
   connection!: amqplib.Connection;
@@ -17,9 +18,9 @@ export default class RabbitMQReceiver {
       await this.channel.assertQueue(rabbitMQConfig.GetQueue_name(), { durable: true });
       await this.channel.bindQueue(rabbitMQConfig.GetQueue_name(), rabbitMQConfig.GetExchange_name(), rabbitMQConfig.GetRouting_key());
 
-      console.info(`RabbitMQReceiver: Connected: ${rabbitMQConfig.GetQueue_name()}`);
+      logger.info(`RabbitMQReceiver: Connected: ${rabbitMQConfig.GetQueue_name()}`);
     } catch (error) {
-      console.error("RabbitMQ: Fail to connect", error);
+      logger.error(`RabbitMQ: ${error}`);
       throw error;
     }
   }
@@ -27,7 +28,7 @@ export default class RabbitMQReceiver {
   async receive() {
     await this.channel.consume(rabbitMQConfig.GetQueue_name(), (msg) => {
       if (msg) {
-        console.info(
+        logger.info(
           `RabbitMQReceiver: Order Proccessed: ${msg.content.toString()}`
         );
         this.channel.ack(msg);

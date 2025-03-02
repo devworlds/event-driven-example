@@ -3,9 +3,12 @@ import axios from "axios";
 import { publishService } from "./services/publisherService";
 import { eventFactory } from "./factories/eventFactory";
 import { consumerService } from "./services/consumerService";
+import pinoHttp from "pino-http";
+import logger from "./utils/logger";
 
 const app = express();
 app.use(express.json());
+app.use(pinoHttp({ logger }));
 
 app.post("/order", async (req, res) => {
   const orderType = "order-created";
@@ -16,23 +19,18 @@ app.post("/order", async (req, res) => {
     orderValue,
   };
   const event = eventFactory.createEvent(orderType, data);
-  console.info(event)
+  logger.info(event)
 
   await publishService.publishEvent(event);
   res.status(201).json({ Order: event });
 });
 
-app.get("/order", async (_req, res) => {
-  consumerService.receiveEvent();
-  res.status(200);
-});
-
 setTimeout(async () => {
   try {
-    await axios.get(`http://localhost:3000/order`);
+    consumerService.receiveEvent();
   } catch (error) {
-    console.error("GetOrder:", error);
+    logger.error("GetOrder:", error);
   }
 }, 1000);
 
-app.listen(3000, () => console.info("OrderService running on 3000"));
+app.listen(3000, () => logger.info("OrderService running on 3000"));

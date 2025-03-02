@@ -2,6 +2,7 @@ import { Event } from "../events/event";
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import Publisher from "./publisher";
 import { snsConfig } from "../config/snsConfig";
+import logger from "../utils/logger";
 
 export class SnsPublisher implements Publisher {
   private sns: SNSClient;
@@ -21,8 +22,8 @@ export class SnsPublisher implements Publisher {
     try {
       await this.sns.send(new PublishCommand(params));
     } catch (err) {
-      console.error("SnsPublisher: ", err);
+      console.error(`SnsPublisher: ${err}`);
     }
-    console.info(`SnsPublisher: Order published on ${event.topic}`);
+    logger.info(`SnsPublisher: Order published on ${event.topic}`);
   }
 }
