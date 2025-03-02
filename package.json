@@ -21,11 +21,15 @@
   "dependencies": {
     "@aws-sdk/client-sns": "^3.758.0",
     "@aws-sdk/client-sqs": "^3.758.0",
+    "@types/pino": "^7.0.4",
     "amqplib": "^0.10.5",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.8.1",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
