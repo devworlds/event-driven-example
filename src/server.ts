@@ -32,4 +32,4 @@ setTimeout(async () => {
   }
 }, 1000);
 
-app.listen(3000, () => logger.info("OrderService running on 3000"));
+app.listen(5000, () => logger.info("OrderService running on 5000"));
