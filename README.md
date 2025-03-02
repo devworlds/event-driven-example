@@ -18,16 +18,25 @@ npm install
 ```
 ## Configuration
 
-### Configure SQS/SNS using Docker
-To configure SQS/SNS using a Docker image, follow the steps below:
-```
-# Commands to configure SQS/SNS
+### Configure LocalStack using Docker
+To configure LocalStack using a Docker image, follow the steps below:
+
+##### Windows
+- Download LocalStack Desktop on microsoft store
+- Create account to free user
+- Launch a new LocalStack Container inside LocalStack Desktop
+- Access container created, and create SQS and SNS services
+- Configure SNS subscription to your SQS
+- Done
+##### Linux
+```bash
+    #Todo
 ```
 ### Configure RabbitMQ using Docker
+```bash
+    docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
-# Commands to configure RabbitMQ
-```
-
+The exchange and queues are created on code, only need to have a local rabbitMQ running.
 ### Configure the .env file
 ```
 #publisher and receiver type
